@@ -57,6 +57,11 @@ def detectar_encoding(ruta):
 
 
 def leer_csv_seguro(ruta, **kwargs):
+    if not os.path.exists(ruta):
+        ruta_gz = ruta + '.gz'
+        if os.path.exists(ruta_gz):
+            ruta = ruta_gz
+            kwargs.setdefault('compression', 'gzip')
     enc = kwargs.pop('encoding', detectar_encoding(ruta))
     df = pd.read_csv(ruta, encoding=enc, **kwargs)
     for col in df.select_dtypes(include='object').columns:
